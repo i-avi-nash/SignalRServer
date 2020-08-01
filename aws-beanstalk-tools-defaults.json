@@ -1,0 +1,25 @@
+
+{
+    "comment" : "This file is used to help set default values when using the dotnet CLI extension Amazon.ElasticBeanstalk.Tools. For more information run \"dotnet eb --help\" from the project root.",
+    "profile" : "visual_studio_aws",
+    "region"  : "ap-south-1",
+    "application" : "SignalRServer",
+    "environment" : "SignalRServer",
+    "cname"       : "signalrserver",
+    "solution-stack" : "64bit Amazon Linux 2 v1.0.0 running .NET Core",
+    "environment-type" : "SingleInstance",
+    "instance-profile" : "aws-elasticbeanstalk-ec2-role",
+    "service-role"     : "aws-elasticbeanstalk-service-role",
+    "health-check-url" : "/",
+    "instance-type"    : "t2.micro",
+    "key-pair"         : "EC2-Instance-1",
+    "iis-website"      : "Default Web Site",
+    "app-path"         : "/",
+    "enable-xray"      : false,
+    "configuration"    : "Release",
+    "framework"        : "netcoreapp3.1",
+    "self-contained"   : false,
+    "enhanced-health-type" : "basic",
+    "additional-options"   : "\"aws:autoscaling:launchconfiguration,SecurityGroups\"=\"sg-c0557da3\";\"aws:ec2:vpc,Subnets\"=\"subnet-c96956a1\"",
+    "proxy-server"         : "nginx"
+}
