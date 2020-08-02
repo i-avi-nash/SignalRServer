@@ -20,6 +20,6 @@
     "framework"        : "netcoreapp3.1",
     "self-contained"   : false,
     "enhanced-health-type" : "basic",
-    "additional-options"   : "\"aws:autoscaling:launchconfiguration,SecurityGroups\"=\"sg-c0557da3\";\"aws:ec2:vpc,Subnets\"=\"subnet-c96956a1\"",
+    "additional-options"   : "",
     "proxy-server"         : "nginx"
 }

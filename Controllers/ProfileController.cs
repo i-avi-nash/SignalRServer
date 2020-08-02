@@ -28,6 +28,7 @@ namespace SignalRServer.Controllers
 
             return new
             {
+                user.Id,
                 user.FullName,
                 user.Email,
                 user.UserName

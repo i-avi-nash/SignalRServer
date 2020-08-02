@@ -1,5 +1,6 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -83,6 +84,22 @@ namespace SignalRServer.Controllers
             await _signInManager.SignOutAsync();
 
             return Ok();
+        }
+
+        [HttpGet("Search")]
+        public async Task<Object> Search(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+
+            if (user.Id != User.Claims.First(c => c.Type == "UserID").Value)
+                return new
+                {
+                    user.Id,
+                    user.FullName,
+                    user.Email,
+                    user.UserName
+                };
+            return null;
         }
     }
 }

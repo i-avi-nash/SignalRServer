@@ -10,8 +10,8 @@ using SignalRServer.EntityFramework;
 namespace SignalRServer.Migrations
 {
     [DbContext(typeof(ChatHubContext))]
-    [Migration("20200731113957_second")]
-    partial class second
+    [Migration("20200802160048_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -154,10 +154,9 @@ namespace SignalRServer.Migrations
 
             modelBuilder.Entity("SignalRServer.Models.Chat", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -167,15 +166,29 @@ namespace SignalRServer.Migrations
                     b.ToTable("Chats");
                 });
 
+            modelBuilder.Entity("SignalRServer.Models.ChatUsers", b =>
+                {
+                    b.Property<Guid>("ChatId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ChatId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ChatUsers");
+                });
+
             modelBuilder.Entity("SignalRServer.Models.Message", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ChatId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ChatId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -201,9 +214,6 @@ namespace SignalRServer.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ChatId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -214,6 +224,9 @@ namespace SignalRServer.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -249,8 +262,6 @@ namespace SignalRServer.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ChatId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -314,20 +325,28 @@ namespace SignalRServer.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SignalRServer.Models.Message", b =>
+            modelBuilder.Entity("SignalRServer.Models.ChatUsers", b =>
                 {
-                    b.HasOne("SignalRServer.Models.Chat", "Chat")
-                        .WithMany("Messages")
+                    b.HasOne("SignalRServer.Models.Chat", null)
+                        .WithMany("ChatUsers")
                         .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignalRServer.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SignalRServer.Models.User", b =>
+            modelBuilder.Entity("SignalRServer.Models.Message", b =>
                 {
                     b.HasOne("SignalRServer.Models.Chat", null)
-                        .WithMany("Users")
-                        .HasForeignKey("ChatId");
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

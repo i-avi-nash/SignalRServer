@@ -42,7 +42,7 @@ namespace SignalRServer.Controllers
         }
 
         [HttpPost("SendMessage")]
-        public async Task<Message> SendMessage(int chatId, string message, string userName, string roomName)
+        public async Task<Message> SendMessage(Guid chatId, string message, string userName, string roomName)
         {
             var Message = new Message
             {
@@ -57,6 +57,29 @@ namespace SignalRServer.Controllers
 
             await _ctx.Clients.Group(roomName)
                 .SendAsync("receiveMessage", Message);
+
+            return Message;
+        }
+
+        [HttpPost("SendPM")]
+        public async Task<Message> SendPM(Guid chatId, string message, string username)
+        {
+            var chat = _context.Chats.FirstOrDefault(c => c.Id == chatId);
+
+            var Message = new Message
+            {
+                Id = Guid.NewGuid(),
+                ChatId = chatId,
+                Text = message,
+                Name = username,
+                Timestamp = DateTime.Now
+            };
+
+            _context.Messages.Add(Message);
+            await _context.SaveChangesAsync();
+
+            await _ctx.Clients.Group(chatId.ToString())
+                .SendAsync("receivePM", Message);
 
             return Message;
         }
